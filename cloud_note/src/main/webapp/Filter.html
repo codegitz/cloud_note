@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>  
+<html>  
+<head>  
+<meta charset="utf-8">
+<script type="text/javascript" src="scripts/jquery.min.js"></script>
+<script type="text/javascript" src="scripts/basevalue.js"></script>  
+<script type="text/javascript">  
+    $(function(){  
+        //按钮单击时执行  ，heiehie
+        $("#testAjax").click(function(){  
+              //取Ajax返回结果  
+              $.ajax({
+            	  url:path+"/test/ajax.do",
+            	  data:{},
+            	  dataType:"json",
+            	  type:"post",
+            	  success:function(result){ 
+            		  $("#myDiv").empty; 
+            	 $("#myDiv").html(result.msg);
+                  //显示Ajax返回结果  
+            	  alert(result.msg);
+            	  },
+            	  error:function(){
+            		  alert("错误");
+            	  }});  
+                
+         });  
+    });  
+</script>      
+</head>  
+    <body>  
+        <div id="myDiv"><h2>返回跨域的文本</h2></div>  
+        <button id="testAjax" type="button">点击获取Ajax跨域返回内容</button>  
+    </body>  
+</html>  

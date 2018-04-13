@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.codegitz.cloud_note.dao.EmpDao">
+  <!-- mysql:数据库自动生成主键值，获取主键值放入对象的id属性中 -->
+       <insert id="save" parameterType="io.codegitz.cloud_note.entity.Emp"
+        useGeneratedKeys="true" keyProperty="id">
+           insert into t_emp (name,age) values (#{name},#{age})
+       </insert>
+</mapper>

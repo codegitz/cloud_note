@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.codegitz.cloud_note.dao.NoteDao">
+	
+	<select id="findByBookId" parameterType="String" resultType="Map">
+	      select cn_note_id,cn_note_title from cn_note where cn_notebook_id=#{bookId} and cn_note_status_id='1'
+	</select>
+	
+	<select id="findByNoteId" parameterType="String" resultType="io.codegitz.cloud_note.entity.Note">
+	      select * from cn_note where cn_note_id=#{noteId}
+	</select>
+	
+	<update id="updateNote" parameterType="io.codegitz.cloud_note.entity.Note">
+	      update cn_note set cn_note_title=#{cn_note_title},cn_note_body=#{cn_note_body},cn_note_last_modify_time=#{cn_note_last_modify_time} where cn_note_id=#{cn_note_id}
+	</update>
+	
+	<insert id="createNewNote" parameterType="io.codegitz.cloud_note.entity.Note">
+	      insert into cn_note (cn_note_id,cn_notebook_id,cn_user_id, cn_note_status_id,cn_note_type_id, cn_note_title,cn_note_body,cn_note_create_time,cn_note_last_modify_time) values (#{cn_note_id},#{cn_notebook_id},#{cn_user_id}, #{cn_note_status_id},#{cn_note_type_id}, #{cn_note_title},#{cn_note_body},#{cn_note_create_time},#{cn_note_last_modify_time})
+	</insert>
+	
+	<update id="deleteNote" parameterType="String">
+	     update cn_note set cn_note_status_id='2' where cn_note_id=#{noteId}
+	</update>
+	
+	<update id="updateNoteByMap" parameterType="Map">
+	   update cn_note set 
+	   <trim suffixOverrides=",">
+	   <if test="title!=null"> cn_note_title=#{title},</if>
+	   <if test="body!=null">cn_note_body=#{body},</if>
+	   <choose>
+	          <when test="time!=null">
+	             cn_note_last_modify_time=#{time}
+	          </when>
+	          
+	          <otherwise>
+	          cn_note_last_modify_time=unix_timestamp()
+	          </otherwise>
+	   </choose>
+	   <!-- <if test="time!=null">cn_note_last_modify_time=#{time}</if> -->
+	   </trim>
+	   where cn_note_id=#{noteId}
+	   
+	</update>
+	
+	<delete id="deleteNotes" parameterType="Map">
+	     delete from cn_note where 
+	     <if test="status!=null">
+	          cn_note_status_id=#{status} and 
+	     </if>
+	     cn_note_id in 
+	     <foreach collection="ids"  item="id" open="(" separator="," close=")">
+	         #{id}
+	     </foreach>
+	 </delete>
+	
+	<delete id="deleteNotesById" parameterType="String">
+	  delete from cn_note where cn_note_id=#{id}
+	</delete>
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.codegitz.cloud_note.dao.RelationDao">
+	<!-- 使用两条SQL语句加载数据 -->
+	<select id="findUserAndBook" parameterType="String" resultMap="userMap1">
+		select * from cn_user where cn_user_id=#{id}
+	</select>
+
+	<resultMap type="io.codegitz.cloud_note.entity.User" id="userMap1">
+		<id property="cn_user_id" column="cn_user_id" />
+		<result property="cn_user_name" column="cn_user_name" />
+		<!-- 指定books属性是List集合，泛型为Book -->
+		<!-- javaType是返回类型 -->
+		<collection property="books" javaType="java.util.List"
+			ofType="io.codegitz.cloud_note.entity.Book" select="findBooks"
+			column="cn_user_id">
+		</collection>
+	</resultMap>
+	<select id="findBooks" parameterType="String"
+		resultType="io.codegitz.cloud_note.entity.Book">
+		select * from cn_user where cn_user_id=#{userId}
+	</select>
+
+	<!-- 一条SQL加载user -->
+	<select id="findUserAndBook1" parameterType="String" resultMap="userMap2">
+		select * from cn_user u join cn_notebook b
+		on(u.cn_user_id=b.cn_user_id) where u.cn_user_id=#{userId}
+	</select>
+	<resultMap type="io.codegitz.cloud_note.entity.User" id="userMap2">
+		<!-- 定义cn_user 字段装载，不能忽略 -->
+		<id property="cn_user_id" column="cn_user_id" />
+		<result property="cn_user_name" column="cn_user_name" />
+		<result property="cn_user_nick" column="cn_user_nick" />
+		<result property="cn_user_password" column="cn_user_password" />
+		<result property="cn_user_token" column="cn_user_token" />
+		<collection property="books" javaType="java.util.List"
+			ofType="io.codegitz.cloud_note.entity.Book">
+			<id property="cn_notebook_id" column="cn_notebook_id" />
+			<result property="cn_user_id" column="cn_user_id" />
+			<result property="cn_notebook_type_id" column="cn_notebook_type_id" />
+			<result property="cn_notebook_name" column="cn_notebook_name" />
+			<result property="cn_notebook_desc" column="cn_notebook_desc" />
+			<result property="cn_notebook_createtime" column="cn_notebook_createtime" />
+		</collection>
+	</resultMap>
+
+	<!-- 两条语句加载Book和关联的User信息 -->
+	<select id="findBookAndUser" resultMap="bookMap">
+		select * from cn_notebook
+	</select>
+	<resultMap type="io.codegitz.cloud_note.entity.Book" id="bookMap">
+		<association property="user" javaType="io.codegitz.cloud_note.entity.User"
+			select="findUser" column="cn_user_id"></association>
+	</resultMap>
+	<select id="findUser" parameterType="String"
+		resultType="io.codegitz.cloud_note.entity.User">
+		select * from cn_user where cn_user_id=#{id}
+	</select>
+
+	<!-- 一条查询语句实现关联查询 -->
+	<select id="findBookAndUser1" parameterType="String" resultMap="bookMap1">
+		select * from cn_notebook b join cn_user u
+		on(b.cn_user_id=u.cn_user_id) 
+	</select>
+	<resultMap type="io.codegitz.cloud_note.entity.Book" id="bookMap1">
+		<!-- 定义cn_notebook字段 -->
+		<id property="cn_notebook_id" column="cn_notebook_id" />
+		<result property="cn_user_id" column="cn_user_id" />
+		<result property="cn_notebook_type_id" column="cn_notebook_type_id" />
+		<result property="cn_notebook_name" column="cn_notebook_name" />
+		<result property="cn_notebook_desc" column="cn_notebook_desc" />
+		<result property="cn_notebook_createtime" column="cn_notebook_createtime" />
+		<association property="user" javaType="io.codegitz.cloud_note.entity.User" >
+			<id property="cn_user_id" column="cn_user_id" />
+			<result property="cn_user_name" column="cn_user_name" />
+			<result property="cn_user_nick" column="cn_user_nick" />
+			<result property="cn_user_password" column="cn_user_password" />
+			<result property="cn_user_token" column="cn_user_token" />
+		</association>
+	</resultMap>
+
+
+</mapper>
