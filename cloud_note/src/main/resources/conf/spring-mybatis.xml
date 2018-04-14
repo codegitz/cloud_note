@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans" 
@@ -22,10 +22,10 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
      <!-- 配置数据库参数及连接池 -->
      <bean id="dbcp" class="org.apache.commons.dbcp.BasicDataSource">
-           <property name="username" value="sa"></property>
-           <property name="password" value="codegit123456"></property>
+           <property name="username" value="root"></property>
+           <property name="password" value="123456"></property>
            <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-           <property name="url" value="jdbc:mysql://47.106.120.224:3306/cloud_note"></property>
+           <property name="url" value="jdbc:mysql://localhost:3306/cloud_note"></property>
            
      </bean>
      <!-- 配置SqlSessionFactory -->
